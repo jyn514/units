@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 import tkinter as tk
-from units import unit, predefined  # requires pip package; TODO: bundle
+from units import predefined, REGISTRY  # requires pip package; TODO: bundle
+
+predefined.define_units()
 
 class App:
     def __init__(self, root):
+
         top_frame = tk.Frame(root)
         top_frame.pack()
         
@@ -13,7 +16,7 @@ class App:
         self.number_button.pack(side='left')
 
         self.from_units = tk.StringVar()
-        self.from_units.set("meters")
+        self.from_units.set("m")
 
         self.from_units_button = tk.Entry(top_frame,
                                           textvariable=self.from_units)
@@ -40,7 +43,10 @@ class App:
         self.result_button.pack(side='left')
         
     def convert(self):
-        pass  # TODO
+        current_unit = REGISTRY[self.from_units.get()]
+        quantity = current_unit(self.number.get())
+        dest_unit = REGISTRY[self.to_units.get()]
+        self.result.set(dest_unit(quantity).num)
                 
 root = tk.Tk()
 root.title("Units converter")
